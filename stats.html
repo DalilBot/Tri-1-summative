@@ -159,6 +159,7 @@
         .subject-stats.chemistry h3 { color: #00d9ff; }
         .subject-stats.physics h3 { color: #ff6b6b; }
         .subject-stats.business h3 { color: #ffd93d; }
+        .subject-stats.other h3 { color: #667eea; }
 
         .click-item {
             display: flex;
@@ -367,28 +368,34 @@
         const API_TOKEN = '12tmoo7i14a021hqzvahxxjmuykbzyu5gx944eio9dfu6wgfjo';
         const API_BASE = 'https://dalil-bot.goatcounter.com/api/v0';
 
-        // Button click tracking paths (now with 'click/' prefix)
+        // Button click tracking paths - matches what GoatCounter records
         const clickPaths = {
             chemistry: [
-                { path: 'click/chemistry-main-folder', label: 'Main Folder', icon: '📁' },
-                { path: 'click/chemistry-powerpoints', label: 'PowerPoints', icon: '📊' },
-                { path: 'click/chemistry-packs', label: 'Packs', icon: '📦' },
-                { path: 'click/chemistry-ai-helper', label: 'AI Helper', icon: '🤖' }
+                { path: 'click/chemistry-main-folder', altPath: 'chemistry-main-folder', label: 'Main Folder', icon: '📁' },
+                { path: 'click/chemistry-powerpoints', altPath: 'chemistry-powerpoints', label: 'PowerPoints', icon: '📊' },
+                { path: 'click/chemistry-packs', altPath: 'chemistry-packs', label: 'Packs', icon: '📦' },
+                { path: 'click/chemistry-ai-helper', altPath: 'chemistry-ai-helper', label: 'AI Helper', icon: '🤖' }
             ],
             physics: [
-                { path: 'click/physics-main-folder', label: 'Main Folder', icon: '📁' },
-                { path: 'click/physics-powerpoints', label: 'PowerPoints', icon: '📊' },
-                { path: 'click/physics-packs', label: 'Packs', icon: '📦' },
-                { path: 'click/physics-ai-helper', label: 'AI Helper', icon: '🤖' }
+                { path: 'click/physics-main-folder', altPath: 'physics-main-folder', label: 'Main Folder', icon: '📁' },
+                { path: 'click/physics-powerpoints', altPath: 'physics-powerpoints', label: 'PowerPoints', icon: '📊' },
+                { path: 'click/physics-packs', altPath: 'physics-packs', label: 'Packs', icon: '📦' },
+                { path: 'click/physics-ai-helper', altPath: 'physics-ai-helper', label: 'AI Helper', icon: '🤖' }
             ],
             business: [
-                { path: 'click/business-main-folder', label: 'Main Folder', icon: '📁' },
-                { path: 'click/business-powerpoints', label: 'PowerPoints', icon: '📊' },
-                { path: 'click/business-packs', label: 'Packs', icon: '📦' },
-                { path: 'click/business-textbook', label: 'Textbook', icon: '📚' },
-                { path: 'click/business-ai-helper', label: 'AI Helper', icon: '🤖' }
+                { path: 'click/business-main-folder', altPath: 'business-main-folder', label: 'Main Folder', icon: '📁' },
+                { path: 'click/business-powerpoints', altPath: 'business-powerpoints', label: 'PowerPoints', icon: '📊' },
+                { path: 'click/business-packs', altPath: 'business-packs', label: 'Packs', icon: '📦' },
+                { path: 'click/business-textbook', altPath: 'business-textbook', label: 'Textbook', icon: '📚' },
+                { path: 'click/business-ai-helper', altPath: 'business-ai-helper', label: 'AI Helper', icon: '🤖' }
+            ],
+            other: [
+                { path: 'click/main-drive', altPath: 'main-drive', label: 'Main Drive', icon: '📁' }
             ]
         };
+
+        // Store all hits data globally
+        let allHitsData = [];
 
         async function fetchStats() {
             try {
@@ -408,34 +415,31 @@
 
         async function fetchHits(period = 'week') {
             try {
-                const response = await fetch(`${API_BASE}/stats/hits?period=${period}`, {
+                const response = await fetch(`${API_BASE}/stats/hits?period=${period}&limit=100`, {
                     headers: {
                         'Authorization': `Bearer ${API_TOKEN}`
                     }
                 });
                 
                 if (!response.ok) throw new Error('Failed to fetch hits');
-                return await response.json();
+                const data = await response.json();
+                allHitsData = data.hits || [];
+                return data;
             } catch (error) {
                 console.error('Error fetching hits:', error);
                 return null;
             }
         }
 
-        async function fetchPathStats(path) {
-            try {
-                const response = await fetch(`${API_BASE}/stats/hits?filter=${encodeURIComponent(path)}`, {
-                    headers: {
-                        'Authorization': `Bearer ${API_TOKEN}`
-                    }
-                });
-                
-                if (!response.ok) return 0;
-                const data = await response.json();
-                return data.total || 0;
-            } catch (error) {
-                return 0;
+        function getClickCount(pathName, altPath) {
+            // Search through all hits for matching path
+            for (const hit of allHitsData) {
+                if (hit.path === pathName || hit.path === altPath || 
+                    hit.path === '/' + pathName || hit.path === '/' + altPath) {
+                    return hit.count || 0;
+                }
             }
+            return 0;
         }
 
         function formatNumber(num) {
@@ -455,15 +459,33 @@
                     fetchHits('week')
                 ]);
 
-                // Calculate totals
+                // Calculate totals - separate page views from clicks
                 let totalVisitors = 0;
                 let totalPageviews = 0;
+                let totalClicks = 0;
                 let todayViews = 0;
                 let dailyData = [];
 
                 if (hitsData && hitsData.hits) {
                     hitsData.hits.forEach(hit => {
-                        totalPageviews += hit.count || 0;
+                        // Check if it's a click event (contains click paths)
+                        const isClick = hit.path && (
+                            hit.path.includes('click/') || 
+                            hit.path.includes('-main-folder') ||
+                            hit.path.includes('-powerpoints') ||
+                            hit.path.includes('-packs') ||
+                            hit.path.includes('-ai-helper') ||
+                            hit.path.includes('-textbook') ||
+                            hit.path === 'main-drive' ||
+                            hit.path === '/main-drive'
+                        );
+                        
+                        if (isClick) {
+                            totalClicks += hit.count || 0;
+                        } else {
+                            totalPageviews += hit.count || 0;
+                        }
+                        
                         if (hit.stats) {
                             hit.stats.forEach(stat => {
                                 dailyData.push({
@@ -477,7 +499,6 @@
 
                 if (totalStats) {
                     totalVisitors = totalStats.total_unique || totalStats.total || 0;
-                    totalPageviews = totalStats.total || totalPageviews;
                 }
 
                 // Get today's count
@@ -496,15 +517,15 @@
                         </div>
                         <div class="stat-card pageviews">
                             <div class="stat-value">${formatNumber(totalPageviews)}</div>
-                            <div class="stat-label">Total Page Views</div>
+                            <div class="stat-label">Page Views</div>
+                        </div>
+                        <div class="stat-card clicks">
+                            <div class="stat-value">${formatNumber(totalClicks)}</div>
+                            <div class="stat-label">Button Clicks</div>
                         </div>
                         <div class="stat-card today">
                             <div class="stat-value">${formatNumber(todayViews)}</div>
                             <div class="stat-label">Views Today</div>
-                        </div>
-                        <div class="stat-card clicks">
-                            <div class="stat-value" id="total-clicks">-</div>
-                            <div class="stat-label">Total Clicks</div>
                         </div>
                     </div>
 
@@ -535,6 +556,12 @@
                             <div class="subject-stats business">
                                 <h3>💼 Business</h3>
                                 <div id="business-clicks">
+                                    <div class="loading"><div class="loading-spinner"></div></div>
+                                </div>
+                            </div>
+                            <div class="subject-stats other">
+                                <h3>🌐 General</h3>
+                                <div id="other-clicks">
                                     <div class="loading"><div class="loading-spinner"></div></div>
                                 </div>
                             </div>
@@ -608,16 +635,12 @@
         }
 
         async function loadClickStats() {
-            let totalClicks = 0;
-
             for (const [subject, paths] of Object.entries(clickPaths)) {
                 const container = document.getElementById(`${subject}-clicks`);
                 let html = '';
 
                 for (const item of paths) {
-                    // For now, show placeholder - GoatCounter click tracking needs page loads to register
-                    const count = 0; // Will populate as clicks happen
-                    totalClicks += count;
+                    const count = getClickCount(item.path, item.altPath);
 
                     html += `
                         <div class="click-item">
@@ -627,11 +650,10 @@
                     `;
                 }
 
-                container.innerHTML = html;
+                if (container) {
+                    container.innerHTML = html;
+                }
             }
-
-            // Update total clicks
-            document.getElementById('total-clicks').textContent = formatNumber(totalClicks);
         }
 
         // Load analytics on page load
