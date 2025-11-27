@@ -119,7 +119,28 @@
 
         <footer>
             <p>Good luck with your exams! 🍀</p>
+            <a href="stats.html" class="stats-link">📊 View Analytics</a>
         </footer>
     </div>
+
+    <!-- Click tracking script -->
+    <script>
+        // Wait for GoatCounter to load, then track clicks
+        document.addEventListener('DOMContentLoaded', function() {
+            // Find all elements with data-goatcounter-click attribute
+            document.querySelectorAll('[data-goatcounter-click]').forEach(function(el) {
+                el.addEventListener('click', function() {
+                    var clickName = this.getAttribute('data-goatcounter-click');
+                    // Send click event to GoatCounter
+                    if (typeof goatcounter !== 'undefined' && goatcounter.count) {
+                        goatcounter.count({
+                            path: 'click/' + clickName,
+                            event: true
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
