@@ -42,7 +42,7 @@ body::before {
 /* Header */
 header {
     text-align: center;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
 }
 
 header h1 {
@@ -88,6 +88,180 @@ header h1 {
     box-shadow: 
         0 0 30px rgba(0, 153, 255, 0.6),
         0 5px 20px rgba(0, 153, 255, 0.4);
+}
+
+/* Exam Schedule Section */
+.exam-schedule {
+    margin-bottom: 2.5rem;
+}
+
+.schedule-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.3rem;
+    color: #00d4ff;
+    text-align: center;
+    margin-bottom: 1.25rem;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.4);
+}
+
+.schedule-grid {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.exam-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: rgba(15, 25, 45, 0.8);
+    border: 1px solid rgba(100, 120, 150, 0.2);
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    min-width: 180px;
+    transition: all 0.3s ease;
+}
+
+.exam-item.past {
+    opacity: 0.5;
+    filter: grayscale(0.3);
+}
+
+.exam-item.today {
+    border-color: rgba(150, 150, 180, 0.3);
+    opacity: 0.85;
+}
+
+.exam-item.upcoming {
+    border-color: rgba(0, 255, 200, 0.4);
+    box-shadow: 
+        0 0 15px rgba(0, 255, 200, 0.2),
+        0 0 30px rgba(0, 255, 200, 0.1);
+    animation: exam-pulse 2s ease-in-out infinite;
+}
+
+@keyframes exam-pulse {
+    0%, 100% { 
+        box-shadow: 
+            0 0 15px rgba(0, 255, 200, 0.2),
+            0 0 30px rgba(0, 255, 200, 0.1);
+    }
+    50% { 
+        box-shadow: 
+            0 0 20px rgba(0, 255, 200, 0.35),
+            0 0 40px rgba(0, 255, 200, 0.2);
+    }
+}
+
+.exam-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 40px;
+}
+
+.exam-date .day {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+}
+
+.exam-date .month {
+    font-size: 0.65rem;
+    color: #7a8ba3;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.exam-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.exam-subject {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #e0e0e0;
+}
+
+.exam-time {
+    font-size: 0.75rem;
+    color: #6b7a8f;
+}
+
+.exam-status {
+    margin-left: auto;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 8px;
+}
+
+.exam-status.done {
+    color: #ff5555;
+}
+
+.done-x {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #ff5555;
+    text-shadow: 0 0 5px rgba(255, 85, 85, 0.5);
+}
+
+.exam-status.today-status {
+    color: #a0a0a0;
+    background: rgba(150, 150, 150, 0.1);
+}
+
+.exam-status.upcoming-status {
+    color: #00ffc8;
+    background: rgba(0, 255, 200, 0.1);
+}
+
+.exam-status.future-status {
+    color: #7a8ba3;
+}
+
+/* Subject Card - Next Exam Highlight */
+.subject-card.next-exam {
+    animation: card-glow 2.5s ease-in-out infinite;
+}
+
+.subject-card.chemistry.next-exam {
+    box-shadow: 
+        0 0 25px rgba(0, 255, 200, 0.25),
+        0 0 50px rgba(0, 255, 200, 0.15),
+        inset 0 0 30px rgba(0, 255, 200, 0.03);
+}
+
+.subject-card.physics.next-exam {
+    box-shadow: 
+        0 0 25px rgba(255, 50, 100, 0.25),
+        0 0 50px rgba(255, 50, 100, 0.15),
+        inset 0 0 30px rgba(255, 50, 100, 0.03);
+}
+
+.subject-card.business.next-exam {
+    box-shadow: 
+        0 0 25px rgba(255, 220, 0, 0.25),
+        0 0 50px rgba(255, 220, 0, 0.15),
+        inset 0 0 30px rgba(255, 220, 0, 0.03);
+}
+
+.subject-card.math.next-exam {
+    box-shadow: 
+        0 0 25px rgba(255, 140, 0, 0.25),
+        0 0 50px rgba(255, 140, 0, 0.15),
+        inset 0 0 30px rgba(255, 140, 0, 0.03);
+}
+
+@keyframes card-glow {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.1); }
 }
 
 /* Subjects Grid */

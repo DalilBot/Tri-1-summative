@@ -21,6 +21,57 @@
             </a>
         </header>
 
+        <!-- Exam Schedule Section -->
+        <section class="exam-schedule">
+            <h2 class="schedule-title">📅 Exam Schedule</h2>
+            <div class="schedule-grid" id="schedule-grid">
+                <div class="exam-item" data-subject="chemistry" data-date="2025-11-30">
+                    <div class="exam-date">
+                        <span class="day">30</span>
+                        <span class="month">NOV</span>
+                    </div>
+                    <div class="exam-info">
+                        <span class="exam-subject">🧪 Chemistry</span>
+                        <span class="exam-time">Sunday</span>
+                    </div>
+                    <div class="exam-status"></div>
+                </div>
+                <div class="exam-item" data-subject="physics" data-date="2025-12-01">
+                    <div class="exam-date">
+                        <span class="day">01</span>
+                        <span class="month">DEC</span>
+                    </div>
+                    <div class="exam-info">
+                        <span class="exam-subject">⚛️ Physics</span>
+                        <span class="exam-time">Monday</span>
+                    </div>
+                    <div class="exam-status"></div>
+                </div>
+                <div class="exam-item" data-subject="business" data-date="2025-12-02">
+                    <div class="exam-date">
+                        <span class="day">02</span>
+                        <span class="month">DEC</span>
+                    </div>
+                    <div class="exam-info">
+                        <span class="exam-subject">💼 Business</span>
+                        <span class="exam-time">Tuesday</span>
+                    </div>
+                    <div class="exam-status"></div>
+                </div>
+                <div class="exam-item" data-subject="math" data-date="2025-12-07">
+                    <div class="exam-date">
+                        <span class="day">07</span>
+                        <span class="month">DEC</span>
+                    </div>
+                    <div class="exam-info">
+                        <span class="exam-subject">📐 Math</span>
+                        <span class="exam-time">Sunday</span>
+                    </div>
+                    <div class="exam-status"></div>
+                </div>
+            </div>
+        </section>
+
         <main class="subjects-grid">
             <!-- Chemistry Card -->
             <div class="subject-card chemistry">
@@ -165,7 +216,63 @@
                     }
                 });
             });
+
+            // Highlight upcoming exam and corresponding subject card
+            highlightUpcomingExam();
         });
+
+        function highlightUpcomingExam() {
+            const examItems = document.querySelectorAll('.exam-item');
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            let upcomingFound = false;
+            
+            examItems.forEach(function(item) {
+                const examDate = new Date(item.dataset.date);
+                examDate.setHours(0, 0, 0, 0);
+                const subject = item.dataset.subject;
+                const statusEl = item.querySelector('.exam-status');
+                
+                // Calculate days difference
+                const diffTime = examDate - today;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                if (diffDays < 0) {
+                    // Past exam - completed
+                    item.classList.add('past');
+                    statusEl.innerHTML = '<span class="done-x">✗</span>';
+                    statusEl.classList.add('done');
+                } else if (diffDays === 0) {
+                    // Today's exam - show as today but don't glow
+                    item.classList.add('today');
+                    statusEl.textContent = '📝 Today';
+                    statusEl.classList.add('today-status');
+                    if (!upcomingFound) {
+                        // Only highlight if no future exam found yet
+                        upcomingFound = true;
+                    }
+                } else if (!upcomingFound) {
+                    // Next upcoming exam - THIS one glows
+                    item.classList.add('upcoming');
+                    statusEl.textContent = diffDays === 1 ? '⏰ Tomorrow!' : `📆 ${diffDays} days`;
+                    statusEl.classList.add('upcoming-status');
+                    highlightSubjectCard(subject);
+                    upcomingFound = true;
+                } else {
+                    // Future exam (not the next one)
+                    statusEl.textContent = `${diffDays} days`;
+                    statusEl.classList.add('future-status');
+                }
+            });
+        }
+
+        function highlightSubjectCard(subject) {
+            const card = document.querySelector(`.subject-card.${subject}`);
+            if (card) {
+                card.classList.add('next-exam');
+            }
+        }
     </script>
 </body>
 </html>
