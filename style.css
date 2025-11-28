@@ -259,6 +259,13 @@ header h1 {
         inset 0 0 30px rgba(255, 140, 0, 0.03);
 }
 
+.subject-card.french.next-exam {
+    box-shadow: 
+        0 0 25px rgba(77, 159, 255, 0.25),
+        0 0 50px rgba(77, 159, 255, 0.15),
+        inset 0 0 30px rgba(77, 159, 255, 0.03);
+}
+
 @keyframes card-glow {
     0%, 100% { filter: brightness(1); }
     50% { filter: brightness(1.1); }
@@ -337,6 +344,19 @@ header h1 {
 .subject-card.math .card-header h2 {
     color: #ff8c00;
     text-shadow: 0 0 10px rgba(255, 140, 0, 0.5);
+}
+
+/* French Card - Blue */
+.subject-card.french {
+    border: 1px solid rgba(0, 100, 255, 0.3);
+    box-shadow: 
+        0 0 20px rgba(0, 100, 255, 0.1),
+        inset 0 0 30px rgba(0, 100, 255, 0.02);
+}
+
+.subject-card.french .card-header h2 {
+    color: #4d9fff;
+    text-shadow: 0 0 10px rgba(77, 159, 255, 0.5);
 }
 
 .subject-card:hover {
@@ -493,6 +513,25 @@ header h1 {
     background: linear-gradient(135deg, #3d1a1a 0%, #4a2020 100%);
     color: #ff7755;
     border: 1px solid rgba(255, 119, 85, 0.2);
+}
+
+/* French buttons */
+.subject-card.french .link-btn.drive {
+    background: linear-gradient(135deg, #0a2d4d 0%, #0d3a5f 100%);
+    color: #4d9fff;
+    border: 1px solid rgba(77, 159, 255, 0.2);
+}
+
+.subject-card.french .link-btn.powerpoint {
+    background: linear-gradient(135deg, #1a2d4d 0%, #1e3a5f 100%);
+    color: #6db3ff;
+    border: 1px solid rgba(109, 179, 255, 0.2);
+}
+
+.subject-card.french .link-btn.packs {
+    background: linear-gradient(135deg, #1a1a4d 0%, #24245f 100%);
+    color: #8080ff;
+    border: 1px solid rgba(128, 128, 255, 0.2);
 }
 
 /* Notebook/AI Helper special styling */
