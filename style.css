@@ -98,6 +98,11 @@ header h1 {
     margin-bottom: 2.5rem;
 }
 
+/* Center the last card if it's alone in its row */
+.subject-card:last-child:nth-child(3n + 1) {
+    grid-column: 2;
+}
+
 /* Subject Cards */
 .subject-card {
     background: rgba(10, 20, 40, 0.6);
@@ -145,6 +150,19 @@ header h1 {
 .subject-card.business .card-header h2 {
     color: #ffdc00;
     text-shadow: 0 0 10px rgba(255, 220, 0, 0.5);
+}
+
+/* Math Card - Orange */
+.subject-card.math {
+    border: 1px solid rgba(255, 140, 0, 0.3);
+    box-shadow: 
+        0 0 20px rgba(255, 140, 0, 0.1),
+        inset 0 0 30px rgba(255, 140, 0, 0.02);
+}
+
+.subject-card.math .card-header h2 {
+    color: #ff8c00;
+    text-shadow: 0 0 10px rgba(255, 140, 0, 0.5);
 }
 
 .subject-card:hover {
@@ -282,6 +300,25 @@ header h1 {
     background: linear-gradient(135deg, #4d1a3a 0%, #5f1e4a 100%);
     color: #ff6baa;
     border: 1px solid rgba(255, 107, 170, 0.3);
+}
+
+/* Math buttons */
+.subject-card.math .link-btn.drive {
+    background: linear-gradient(135deg, #3d2a0a 0%, #4a350d 100%);
+    color: #ffb84d;
+    border: 1px solid rgba(255, 184, 77, 0.2);
+}
+
+.subject-card.math .link-btn.powerpoint {
+    background: linear-gradient(135deg, #4d2a1a 0%, #5f351e 100%);
+    color: #ff9966;
+    border: 1px solid rgba(255, 153, 102, 0.2);
+}
+
+.subject-card.math .link-btn.packs {
+    background: linear-gradient(135deg, #3d1a1a 0%, #4a2020 100%);
+    color: #ff7755;
+    border: 1px solid rgba(255, 119, 85, 0.2);
 }
 
 /* Notebook/AI Helper special styling */
