@@ -231,9 +231,8 @@
         </main>
 
         <footer>
-            <p>May Allah grant you success in your exams! 🤲</p>
+            <p>Good luck with your exams! 🍀</p>
             <a href="stats.html" class="stats-link">📊 View Analytics</a>
-            
         </footer>
     </div>
 
@@ -257,6 +256,7 @@
 
             // Highlight upcoming exam and corresponding subject card
             highlightUpcomingExam();
+            fadeCompletedSubjects();
         });
 
         function highlightUpcomingExam() {
@@ -282,14 +282,10 @@
                     statusEl.innerHTML = '<span class="done-x">✗</span>';
                     statusEl.classList.add('done');
                 } else if (diffDays === 0) {
-                    // Today's exam - show as today but don't glow
-                    item.classList.add('today');
-                    statusEl.textContent = '📝 Today';
-                    statusEl.classList.add('today-status');
-                    if (!upcomingFound) {
-                        // Only highlight if no future exam found yet
-                        upcomingFound = true;
-                    }
+                    // Today's exam - mark as today but find next upcoming
+                    item.classList.add('past');
+                    statusEl.innerHTML = '<span class="done-x">✗</span>';
+                    statusEl.classList.add('done');
                 } else if (!upcomingFound) {
                     // Next upcoming exam - THIS one glows
                     item.classList.add('upcoming');
@@ -311,12 +307,20 @@
                 card.classList.add('next-exam');
             }
         }
+
+        // Fade completed exam subject cards
+        function fadeCompletedSubjects() {
+            const examItems = document.querySelectorAll('.exam-item.past');
+            examItems.forEach(function(item) {
+                const subject = item.dataset.subject;
+                const card = document.querySelector(`.subject-card.${subject}`);
+                if (card) {
+                    card.classList.add('exam-done');
+                }
+            });
+        }
+
+        // Functions are called inside DOMContentLoaded above
     </script>
 </body>
 </html>
-
-
-
-
-
-
